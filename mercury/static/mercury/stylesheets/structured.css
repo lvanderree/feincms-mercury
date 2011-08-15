@@ -1,0 +1,45 @@
+strong, dfn {
+    font-weight:bold;
+}
+em, dfn {
+    font-style:italic;
+}
+
+form .aligned p, form .aligned ul {
+    margin-left: 0px;
+    padding-left: 0px;
+}
+
+.mercury-region {
+    border: 1px solid #CCC;
+    display: inline-block;
+    padding: 4px;
+    width: 580px;
+    height: auto;
+    overflow: auto;
+    min-height: 100px;
+}
+
+.mercury-region h2:before {
+    content:"> ";
+}
+.mercury-region h2 {
+    background: none;
+
+    font-size:1.5em;
+    font-weight: bold;
+    color: #EE7D11;
+
+    margin: 0;
+    margin-bottom: 0.75em;
+    margin-top: 35px;
+
+    clear:both;
+    padding: 0px;
+}
+
+
+#fe_tools a {
+    cursor: pointer;
+    margin: 0px;
+}
