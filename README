@@ -1,1 +1,50 @@
 This is the Mercury FeinCMS package
+
+
+You should have installed FeinCMS (1.3)
+
+in order to use this module, install it from git:
+
+pip install -e git@github.com:lvanderree/MercuryFein.git#egg=MercuryFein-dev
+
+
+add it to your settings.yml
+
+  INSTALLED_APPS = (
+    ...
+    # Mercury
+    'mercury',
+
+    # FeinCMS
+    'feincms',
+    'feincms.module.page',
+    'feincms.module.medialibrary',
+    ...
+  )
+
+  # disable the tinymce init
+  FEINCMS_RICHTEXT_INIT_TEMPLATE = 'admin/content/richtext/init_mercury.html' # Enable for mercury, instead of default tiny_mce
+
+  # clean html from richeditor
+  FEINCMS_TIDY_HTML = True
+  FEINCMS_TIDY_FUNCTION = 'mercury.utils.tidy'
+
+
+
+add it to urls.py (for uploading images, and saving from frontend)
+
+    # mercury
+    url(r'^mercury/', include('mercury.urls')),
+
+
+see the toolbar in the admin (only functional when editing pages) and enjoy frontend editing
+
+Please note, this is a POC:
+- saving in admin results in a javascript error after showing the resulting page. Reload to get rid of it.
+- missing functionality in frontend: you cannot create, remove or re-order content-items (yet)
+- saving from frontend is done in mercury/views.py, should be done via FeinCMS forms! (E.G. validation, other functionality)
+- admin saving is still done with the form, so no Mercury-save button is available (not very consistent)
+Mercury can use some more functionality:
+- moving of pictures/content
+- not using spans for applying CSS classes
+- resizing images
