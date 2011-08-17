@@ -1,6 +1,7 @@
 import bleach
 
 ALLOWED_TAGS = [
+    'div',
     'p', 'span',
     'a',
     'h2', 'h3', 'h4', 'h5', 'h6',
@@ -13,6 +14,7 @@ ALLOWED_TAGS = [
 ]
 
 ALLOWED_ATTRIBUTES = {
+    'div':  ['class'],
     'p':    ['class'],
     'span': ['class'],
     'a':    ['href', 'title', 'class'],
@@ -24,12 +26,12 @@ ALLOWED_ATTRIBUTES = {
     'abbr': ['title'],
     'acronym': ['title'],
 
-    'img': ['class', 'src', 'alt', 'width', 'height'],
+    'img': ['class', 'src', 'alt', 'title', 'width', 'height'],
 }
 
 def sanitize(text, tags=ALLOWED_TAGS, attributes=ALLOWED_ATTRIBUTES):
     "sanitize html"
-    return bleach.clean(text, strip=True, tags=tags, attributes=attributes)
+    return bleach.clean(text, strip=True, tags=tags, attributes=attributes, strip_comments=False)
 
 def tidy(text):
     "sanitize wrapper in tidy interface"

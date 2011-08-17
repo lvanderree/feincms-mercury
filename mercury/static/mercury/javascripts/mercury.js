@@ -11968,6 +11968,7 @@ Showdown.converter = function() {
         };
         iframeWindow.Mercury = Mercury;
         this.bindEvents();
+        this.resize();
         this.initializeRegions();
         this.finalizeInterface();
         Mercury.trigger('ready');
@@ -11975,6 +11976,9 @@ Showdown.converter = function() {
           visibility: 'visible'
         });
       } catch (error) {
+        // refresh
+//        $('body').html("error showing page ("+error+"): reloading...");
+//        location.reload(true);
         return alert("Mercury.PageEditor failed to load: " + error + "\n\nPlease try refreshing.");
       }
     };
@@ -15070,7 +15074,9 @@ Showdown.converter = function() {
       var selection;
       if (Mercury.region !== this) {
         this.element.focus();
-        selection = this.selection().selection.collapseToStart();
+        try { // TODO: maybe find a better way to prevent errors with collapseToStart()
+           selection = this.selection().selection.collapseToStart();
+        } catch(err) {}
       }
       Mercury.trigger('region:focused', {
         region: this

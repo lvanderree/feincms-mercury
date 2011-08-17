@@ -160,8 +160,9 @@ if (!window.mercuryPackages) window.mercuryPackages = {
       // wait for assets and slow javascripts to load or complete.
 
       // replace alle textareas with contenteditable divs
-      $('textarea.item-richtext').hide();
-      $('textarea.item-richtext').each(function () {
+      var textareas = $('textarea.item-richtext');
+      textareas.hide();
+      textareas.each(function () {
           var textarea = $(this);
           content = textarea.val();
           var editable = $('<div id="div_'+textarea.attr('id')+'" class="mercury-region" data-type="editable">'+content+'</div>');
