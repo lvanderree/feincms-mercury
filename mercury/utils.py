@@ -8,20 +8,33 @@ ALLOWED_TAGS = [
     'b', 'strong',
     'i', 'em',
     'ol', 'ul', 'li',
+    'dl', 'dt', 'dd',
     'code', 'pre',
     'abbr', 'acronym', 'blockquote',
-    'br', 'img',
+    #'br',
+    'img',
 ]
 
 ALLOWED_ATTRIBUTES = {
+    'h2':   ['class'],
+    'h3':   ['class'],
+    'h4':   ['class'],
+    'h5':   ['class'],
+    'h6':   ['class'],
+
+
     'div':  ['class'],
     'p':    ['class'],
     'span': ['class'],
-    'a':    ['href', 'title', 'class'],
+    'a':    ['href', 'title', 'class', 'target'],
 
     'ol':   ['class'],
     'ul':   ['class'],
     'li':   ['class'],
+
+    'dl':   ['class'],
+    'dt':   ['class'],
+    'dd':   ['class'],
 
     'abbr': ['title'],
     'acronym': ['title'],
@@ -31,7 +44,10 @@ ALLOWED_ATTRIBUTES = {
 
 def sanitize(text, tags=ALLOWED_TAGS, attributes=ALLOWED_ATTRIBUTES):
     "sanitize html"
-    return bleach.clean(text, strip=True, tags=tags, attributes=attributes, strip_comments=False)
+    html = bleach.clean(text, strip=True, tags=tags, attributes=attributes, strip_comments=False)
+
+    # strip empty tags
+    return html.replace('<div></div>','').replace('<p></p>','')
 
 def tidy(text):
     "sanitize wrapper in tidy interface"

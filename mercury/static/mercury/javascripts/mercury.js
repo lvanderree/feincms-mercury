@@ -11950,14 +11950,22 @@ Showdown.converter = function() {
       try {
         if (!this.iframe)
         {
-            // TODO: this happens when navigating/posting data with form (non ajax)
+            // this happens after a post TODO: implement a better solution
+            // 'this' should be PageEditor, but is DOMWindow
+            $($('iframe').get(0).contentWindow.document.body).prepend("<h1>Known error after posting data, reloading...<br>this is probably the result of you posting a form, in which case you can ignore the warning regarding the non-saved data...</h1>");
+            location.reload(true);
+            return;
+//            this.iframe = $('iframe');
+//            this.iframe.data('loaded', false); // reset mercury
         }
         if (this.iframe.data('loaded')) {
           return;
         }
         this.iframe.data('loaded', true);
         this.document = jQuery(this.iframe.get(0).contentWindow.document);
-        jQuery("<style mercury-styles=\"true\">").html(Mercury.config.injectedStyles).appendTo(this.document.find('head'));
+        if (Mercury.config) {
+          jQuery("<style mercury-styles=\"true\">").html(Mercury.config.injectedStyles).appendTo(this.document.find('head'));
+        }
         iframeWindow = this.iframe.get(0).contentWindow;
         jQuery.globalEval = function(data) {
           if (data && /\S/.test(data)) {
@@ -11977,8 +11985,6 @@ Showdown.converter = function() {
         });
       } catch (error) {
         // refresh
-//        $('body').html("error showing page ("+error+"): reloading...");
-//        location.reload(true);
         return alert("Mercury.PageEditor failed to load: " + error + "\n\nPlease try refreshing.");
       }
     };
@@ -13539,7 +13545,7 @@ Showdown.converter = function() {
         });
       }
       this.element.appendTo((_ref = jQuery(this.options.appendTo).get(0)) != null ? _ref : 'body');
-      _ref2 = Mercury.config.toolbars;
+      _ref2 = Mercury.config ? Mercury.config.toolbars : [];
       for (toolbarName in _ref2) {
         if (!__hasProp.call(_ref2, toolbarName)) continue;
         buttons = _ref2[toolbarName];
@@ -14276,7 +14282,7 @@ Showdown.converter = function() {
         style: 'display:none'
       });
       this.element.appendTo((_ref = jQuery(this.options.appendTo).get(0)) != null ? _ref : 'body');
-      _ref2 = Mercury.config.toolbars.snippetable;
+      _ref2 = Mercury.config ? Mercury.config.toolbars.snippetable : [];
       _results = [];
       for (buttonName in _ref2) {
         if (!__hasProp.call(_ref2, buttonName)) continue;
