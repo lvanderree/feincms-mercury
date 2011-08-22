@@ -28,7 +28,6 @@ window.MercurySetup = {
     // this will only change the behavior in webkit, as mozilla doesn't do this.
     cleanStylesOnPaste: true,
 
-
     // ## Snippet Options and Preview
     //
     // When a user drags a snippet onto the page they'll be prompted to enter options for the given snippet.  The server
@@ -266,6 +265,6 @@ window.MercurySetup = {
   // ## Debug Mode
   //
   // Turning debug mode on will log events and other various things (using console.debug if available).
-  debug: true
+  debug: false
 
 };

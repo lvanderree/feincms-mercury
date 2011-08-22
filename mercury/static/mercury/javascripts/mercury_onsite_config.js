@@ -28,8 +28,6 @@ window.MercurySetup = {
     // this will only change the behavior in webkit, as mozilla doesn't do this.
     cleanStylesOnPaste: true,
 
-    saveURL: 'test',
-
     // ## Snippet Options and Preview
     //
     // When a user drags a snippet onto the page they'll be prompted to enter options for the given snippet.  The server

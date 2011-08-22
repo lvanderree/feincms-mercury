@@ -17,9 +17,9 @@ class TextareaMercury(forms.Textarea):
         value = smart_unicode(value)
 
         if not attrs.has_key('class'):
-            attrs['class'] = 'mercury-region'
+            attrs['class'] = 'item-richtext'
         else:
-            attrs['class'] += ' mercury-region'
+            attrs['class'] += ' item-richtext'
         attrs['data-type'] = 'editable'
 
         final_attrs = self.build_attrs(attrs)
