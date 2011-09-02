@@ -29,7 +29,7 @@ def save_content(request):
             page_items = loads(request.POST['content'])
 
             for content_key, item in page_items.iteritems():
-                # TODO: move to model/form cleaning
+                # TODO: use form, so cleaned value can be retrieved
 
                 content = item['value']
                 if settings.FEINCMS_TIDY_HTML:

@@ -10750,8 +10750,8 @@ Showdown.converter = function() {
     // "paragraphs" that are wrapped in non-block-level tags, such as anchors,
     // phrase emphasis, and spans. The list of tags we're looking for is
     // hard-coded:
-    var block_tags_a = "p|div|h[1-6]|blockquote|pre|table|dl|ol|ul|script|noscript|form|fieldset|iframe|math|ins|del";
-    var block_tags_b = "p|div|h[1-6]|blockquote|pre|table|dl|ol|ul|script|noscript|form|fieldset|iframe|math";
+    var block_tags_a = "p|div|h[1-6]|blockquote|pre|code|table|dl|ol|ul|script|noscript|form|fieldset|iframe|math|ins|del";
+    var block_tags_b = "p|div|h[1-6]|blockquote|pre|code|table|dl|ol|ul|script|noscript|form|fieldset|iframe|math";
 
     // First, look for nested blocks, e.g.:
     //   <div>
@@ -10780,7 +10780,7 @@ Showdown.converter = function() {
      )						// attacklab: there are sentinel newlines at end of document
      /gm,function(){...}};
      */
-    text = text.replace(/^(<(p|div|h[1-6]|blockquote|pre|table|dl|ol|ul|script|noscript|form|fieldset|iframe|math|ins|del)\b[^\r]*?\n<\/\2>[ \t]*(?=\n+))/gm, hashElement);
+    text = text.replace(/^(<(p|div|h[1-6]|blockquote|pre|code|table|dl|ol|ul|script|noscript|form|fieldset|iframe|math|ins|del)\b[^\r]*?\n<\/\2>[ \t]*(?=\n+))/gm, hashElement);
 
     //
     // Now match more liberally, simply from `\n<tag>` to `</tag>\n`
@@ -10800,7 +10800,7 @@ Showdown.converter = function() {
      )						// attacklab: there are sentinel newlines at end of document
      /gm,function(){...}};
      */
-    text = text.replace(/^(<(p|div|h[1-6]|blockquote|pre|table|dl|ol|ul|script|noscript|form|fieldset|iframe|math)\b[^\r]*?.*<\/\2>[ \t]*(?=\n+)\n)/gm, hashElement);
+    text = text.replace(/^(<(p|div|h[1-6]|blockquote|pre|code|table|dl|ol|ul|script|noscript|form|fieldset|iframe|math)\b[^\r]*?.*<\/\2>[ \t]*(?=\n+)\n)/gm, hashElement);
 
     // Special case just for <hr />. It was easier to make a special case than
     // to make the other regex more complicated.
@@ -11952,8 +11952,8 @@ Showdown.converter = function() {
         {
             // this happens after a post TODO: implement a better solution
             // 'this' should be PageEditor, but is DOMWindow
-            $($('iframe').get(0).contentWindow.document.body).prepend("<h1>Known error after posting data, reloading...<br>this is probably the result of you posting a form, in which case you can ignore the warning regarding the non-saved data...</h1>");
-            location.reload(true);
+            $($('iframe').get(0).contentWindow.document.body).prepend("<h1>Mercury: Known error after posting data</h1><p>This is probably the result of you posting a form, data is succesfully processed by the server, but the text-editors are broken until you refresh this page in your browser, and this message is gone.</p>");
+//            location.reload(true);
             return;
 //            this.iframe = $('iframe');
 //            this.iframe.data('loaded', false); // reset mercury
@@ -15858,6 +15858,7 @@ Showdown.converter = function() {
           h5: ['##### ', ' #####'],
           h6: ['###### ', ' ######'],
           pre: ['    ', ''],
+          code: ['-- ', ''],
           blockquote: ['> ', ''],
           p: ['\n', '\n']
         };

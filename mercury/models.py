@@ -1,6 +1,9 @@
 from django.db import models
 from django.contrib.admin import widgets as admin_widgets
 from mercury import widgets as mercury_widgets
+from feincms.utils import get_object
+
+from django.conf import settings
 
 class HTMLField(models.TextField):
     """
@@ -16,3 +19,11 @@ class HTMLField(models.TextField):
             defaults['widget'] = mercury_widgets.AdminTextareaMercury
 
         return super(HTMLField, self).formfield(**defaults)
+
+    def clean(self, value, model_instance):
+        value = super(HTMLField, self).clean(value, model_instance)
+
+        if settings.FEINCMS_TIDY_HTML:
+            value, errors, warnings = get_object(settings.FEINCMS_TIDY_FUNCTION)(value )
+
+        return value
