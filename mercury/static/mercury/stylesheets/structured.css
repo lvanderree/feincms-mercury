@@ -43,3 +43,10 @@ form .aligned p, form .aligned ul {
     cursor: pointer;
     margin: 0px;
 }
+
+pre, code {
+    white-space: pre-wrap;        /* css-3 */
+    white-space: -moz-pre-wrap;   /* Mozilla, since 1999 */
+    white-space: -o-pre-wrap;     /* Opera 7 */
+    word-wrap: break-word;        /* Internet Explorer 5.5+ */
+}
