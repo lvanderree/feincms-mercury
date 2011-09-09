@@ -25,7 +25,7 @@
  */
 
 if (!window.Mercury) window.Mercury = window.MercurySetup;
-else if (jQuery) jQuery.extend(window.Mercury, window.MercurySetup);
+else if (typeof(jQuery) !== 'undefined') jQuery.extend(window.Mercury, window.MercurySetup);
 /*!
  * jQuery JavaScript Library v1.6
  * http://jquery.com/
@@ -11805,7 +11805,7 @@ Showdown.converter = function() {
 (function() {
   this.Mercury || (this.Mercury = {});
   jQuery.extend(this.Mercury, {
-    version: '0.1.4',
+    version: '0.2.0',
     supported: document.getElementById && document.designMode && !jQuery.browser.konqueror && !jQuery.browser.msie,
     Regions: {},
     modalHandlers: {},
@@ -11919,9 +11919,9 @@ Showdown.converter = function() {
       window.mercuryInstance = this;
       this.regions = [];
       this.initializeInterface();
-      if (token = jQuery('meta[name="csrf-token"]').attr('content')) {
+      if (token = jQuery(Mercury.config.csrfSelector).attr('content')) {
         Mercury.csrfToken = token;
-        Mercury.csrfTag = 'X-CSRFToken';
+        Mercury.csrfTag = Mercury.config.csrfHeader;
       }
     }
     PageEditor.prototype.initializeInterface = function() {
@@ -11948,24 +11948,12 @@ Showdown.converter = function() {
     PageEditor.prototype.initializeFrame = function() {
       var iframeWindow;
       try {
-        if (!this.iframe)
-        {
-            // this happens after a post TODO: implement a better solution
-            // 'this' should be PageEditor, but is DOMWindow
-            $($('iframe').get(0).contentWindow.document.body).prepend("<h1>Mercury: Known error after posting data</h1><p>This is probably the result of you posting a form, data is succesfully processed by the server, but the text-editors are broken until you refresh this page in your browser, and this message is gone.</p>");
-//            location.reload(true);
-            return;
-//            this.iframe = $('iframe');
-//            this.iframe.data('loaded', false); // reset mercury
-        }
         if (this.iframe.data('loaded')) {
           return;
         }
         this.iframe.data('loaded', true);
         this.document = jQuery(this.iframe.get(0).contentWindow.document);
-        if (Mercury.config) {
-          jQuery("<style mercury-styles=\"true\">").html(Mercury.config.injectedStyles).appendTo(this.document.find('head'));
-        }
+        jQuery("<style mercury-styles=\"true\">").html(Mercury.config.injectedStyles).appendTo(this.document.find('head'));
         iframeWindow = this.iframe.get(0).contentWindow;
         jQuery.globalEval = function(data) {
           if (data && /\S/.test(data)) {
@@ -11984,7 +11972,6 @@ Showdown.converter = function() {
           visibility: 'visible'
         });
       } catch (error) {
-        // refresh
         return alert("Mercury.PageEditor failed to load: " + error + "\n\nPlease try refreshing.");
       }
     };
@@ -12023,7 +12010,7 @@ Showdown.converter = function() {
     };
     PageEditor.prototype.finalizeInterface = function() {
       this.snippetToolbar = new Mercury.SnippetToolbar(this.document);
-      this.hijackLinks();
+      this.hijackLinksAndForms();
       this.resize();
       if (!this.options.visible) {
         return Mercury.trigger('mode', {
@@ -12104,22 +12091,22 @@ Showdown.converter = function() {
       }
       return (url != null ? url : window.location.href).replace(/([http|https]:\/\/.[^\/]*)\/editor\/?(.*)/i, "$1/$2");
     };
-    PageEditor.prototype.hijackLinks = function() {
-      var classname, ignored, link, _i, _j, _len, _len2, _ref, _ref2, _results;
-      _ref = jQuery('a', this.document);
+    PageEditor.prototype.hijackLinksAndForms = function() {
+      var classname, element, ignored, _i, _j, _len, _len2, _ref, _ref2, _results;
+      _ref = jQuery('a, form', this.document);
       _results = [];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        link = _ref[_i];
+        element = _ref[_i];
         ignored = false;
-        _ref2 = this.options.ignoredLinks || [];
+        _ref2 = Mercury.config.nonHijackableClasses || [];
         for (_j = 0, _len2 = _ref2.length; _j < _len2; _j++) {
           classname = _ref2[_j];
-          if (jQuery(link).hasClass(classname)) {
+          if (jQuery(element).hasClass(classname)) {
             ignored = true;
             continue;
           }
         }
-        _results.push(!ignored && (link.target === '' || link.target === '_self') && !jQuery(link).closest('.mercury-region').length ? jQuery(link).attr('target', '_top') : void 0);
+        _results.push(!ignored && (element.target === '' || element.target === '_self') && !jQuery(element).closest('.mercury-region').length ? jQuery(element).attr('target', '_top') : void 0);
       }
       return _results;
     };
@@ -12139,6 +12126,7 @@ Showdown.converter = function() {
       }
       return jQuery.ajax(url, {
         type: 'POST',
+        headers: this.saveHeaders(),
         data: {
           content: data
         },
@@ -12149,6 +12137,12 @@ Showdown.converter = function() {
           return alert("Mercury was unable to save to the url: " + url);
         }, this)
       });
+    };
+    PageEditor.prototype.saveHeaders = function() {
+      var headers;
+      headers = {};
+      headers[Mercury.config.csrfHeader] = Mercury.csrfToken;
+      return headers;
     };
     PageEditor.prototype.serialize = function() {
       var region, serialized, _i, _len, _ref;
@@ -13016,6 +13010,7 @@ Showdown.converter = function() {
       }, this));
     },
     appear: function() {
+      this.showing = true;
       this.position();
       this.overlay.show();
       return this.overlay.animate({
@@ -13030,6 +13025,7 @@ Showdown.converter = function() {
           top: 0
         }, 200, 'easeInOutSine', __bind(function() {
           this.visible = true;
+          this.showing = false;
           return this.load();
         }, this));
       }, this));
@@ -13199,6 +13195,9 @@ Showdown.converter = function() {
       return this.contentElement.html('');
     },
     hide: function() {
+      if (this.showing) {
+        return;
+      }
       Mercury.trigger('focus:frame');
       this.element.hide();
       this.overlay.hide();

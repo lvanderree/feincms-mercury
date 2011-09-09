@@ -11,7 +11,7 @@ ALLOWED_TAGS = [
     'dl', 'dt', 'dd',
     'code', 'pre',
     'abbr', 'acronym', 'blockquote',
-    #'br',
+    'br',
     'img',
 ]
 
