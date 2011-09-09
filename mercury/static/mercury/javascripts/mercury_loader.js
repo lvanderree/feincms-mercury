@@ -73,13 +73,24 @@ if (!window.mercuryPackages) window.mercuryPackages = {
   };
 
   // Hide the document during loading so there isn't a flicker while mercury is being loaded.
-  var head = document.getElementsByTagName("head")[0];
+  var iframe = jQuery('<iframe>', {
+        "class": 'mercury-iframe',
+        seamless: 'true',
+        frameborder: '0',
+        src: 'about:blank',
+        style: 'top:0;width:100%;'//position:absolute;visibility:hidden'
+  });
+  iframe.prependTo('body');
+
+  element = iframe.get(0).contentWindow.document.body;
+
+  var head = iframe.get(0).contentWindow.document.getElementsByTagName("head")[0];
   if (window == top) {
     var style = document.createElement('style');
     var rules = document.createTextNode('body{visibility:hidden;display:none}');
     style.type = 'text/css';
     if (style.styleSheet) style.styleSheet.cssText = rules.nodeValue;
-    else style.appendChild(rules);
+    else style; //.appendChild(rules);
     head.appendChild(style);
   }
 
@@ -110,9 +121,10 @@ if (!window.mercuryPackages) window.mercuryPackages = {
       setTimeout(function() {
         // Once we're ready to load Mercury we clear the document contents, and add in the css and javascript tags.
         // Once the script has loaded we display the body again, and instantiate a new instance of Mercury.PageEditor.
-        document.body.innerHTML = '&nbsp;';
+//        document.body.innerHTML = '&nbsp;';
+
         for (i = 0; i <= document.styleSheets.length - 1; i += 1) {
-          document.styleSheets[i].disabled = true
+//            document.styleSheets[i].disabled = true;
         }
 
         // Load all the stylesheets.
@@ -133,14 +145,15 @@ if (!window.mercuryPackages) window.mercuryPackages = {
           var script = document.createElement('script');
           script.src = options.src + '/' + src;
           script.type = 'text/javascript';
-          head.appendChild(script);
+          document.getElementsByTagName("head")[0].appendChild(script);
           script.onload = function() {
             loaded += 1;
             if (loaded >= javascripts.length) {
-              document.body.style.visibility = 'visible';
-              document.body.style.display = 'block';
+//              document.body.style.visibility = 'visible';
+//              document.body.style.display = 'block';
+
               // Instantiate the PageEditor, passing in the options that were provided to the loader.
-              new Mercury.PageEditor(null, {visible: true});
+              new Mercury.PageEditor(null, {visible: true, appendTo: element});
               // If there's a mercuryLoaded function available, call it.   You can provide one before the loading script
               // and it will be called after everything is loaded, but before everything is initialized.  You can bind
               // to the mercury:ready event or use Mercury.bind('ready', function() {}).
