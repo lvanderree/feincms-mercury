@@ -1,6 +1,8 @@
 from django import forms
 from django.contrib.admin import widgets as admin_widgets
 
+from tinymce import widgets as tinymce_widgets
+
 from django.forms.widgets import flatatt
 from django.utils.safestring import mark_safe
 from django.utils.html import escape
@@ -11,42 +13,44 @@ except ImportError:
 
 import mercury.settings
 
-class TextareaMercury(forms.Textarea):
-    def render(self, name, value, attrs=None):
-        if value is None: value = ''
-        value = smart_unicode(value)
+class TextareaMercury(tinymce_widgets.TinyMCE):
+    pass
+#    def render(self, name, value, attrs=None):
+#        if value is None: value = ''
+#        value = smart_unicode(value)
+#
+#        if not attrs.has_key('class'):
+#            attrs['class'] = 'item-richtext'
+#        else:
+#            attrs['class'] += ' item-richtext'
+#        attrs['data-type'] = 'editable'
+#
+#        final_attrs = self.build_attrs(attrs)
+#        final_attrs['name'] = name
+#
+#        html = [u'<textarea%s>%s</textarea>' % (flatatt(final_attrs), escape(value))]
+#
+#        return mark_safe(u'\n'.join(html))
+#
+#    def _media(self):
+#        js = [
+##            'mercury/javascripts/mercury_loader.js?pack=onsite',
+#        ]
+#        css = {
+##            'screen': [] # done by loader
+#        }
+#        return forms.Media(js=js, css=css)
+#    media = property(_media)
 
-        if not attrs.has_key('class'):
-            attrs['class'] = 'item-richtext'
-        else:
-            attrs['class'] += ' item-richtext'
-        attrs['data-type'] = 'editable'
-
-        final_attrs = self.build_attrs(attrs)
-        final_attrs['name'] = name
-
-        html = [u'<textarea%s>%s</textarea>' % (flatatt(final_attrs), escape(value))]
-
-        return mark_safe(u'\n'.join(html))
-
-    def _media(self):
-        js = [
-            'mercury/javascripts/mercury_loader.js?pack=onsite',
-        ]
-        css = {
-#            'screen': [] # done by loader
-        }
-        return forms.Media(js=js, css=css)
-    media = property(_media)
-
-class AdminTextareaMercury(admin_widgets.AdminTextareaWidget, TextareaMercury):
-    def _media(self):
-        js = [
-            'mercury/javascripts/mercury_loader.js?pack=admin',
-        ]
-        css = {
-#            'screen': [] # done by loader
-        }
-        return forms.Media(js=js, css=css)
-    media = property(_media)
-
+class AdminTextareaMercury(tinymce_widgets.AdminTinyMCE):
+    pass
+#    def _media(self):
+#        js = [
+##            'mercury/javascripts/mercury_loader.js?pack=admin',
+#        ]
+#        css = {
+##            'screen': [] # done by loader
+#        }
+#        return forms.Media(js=js, css=css)
+#    media = property(_media)
+#

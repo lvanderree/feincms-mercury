@@ -1,3 +1,9 @@
+td.mceCenter table {
+    text-align:left;
+}
+
+
+
 strong, dfn {
     font-weight:bold;
 }
