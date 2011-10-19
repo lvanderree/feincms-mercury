@@ -13,6 +13,8 @@ ALLOWED_TAGS = [
     'abbr', 'acronym', 'blockquote',
     'br',
     'img',
+
+    'table', 'thead', 'tbody', 'tfoot', 'tr', 'th', 'td',
 ]
 
 ALLOWED_ATTRIBUTES = {
@@ -40,6 +42,14 @@ ALLOWED_ATTRIBUTES = {
     'acronym': ['title'],
 
     'img': ['class', 'src', 'alt', 'title', 'width', 'height'],
+
+    'table': ['class', 'style', 'border', 'cellspacing', 'cellpadding'],
+    'thead': ['class'],
+    'tbody': ['class'],
+    'tfoot': ['class'],
+    'tr':    ['class'],
+    'th':    ['class', 'scope', 'colspan'],
+    'td':    ['class', 'scope', 'colspan'],
 }
 
 def sanitize(text, tags=ALLOWED_TAGS, attributes=ALLOWED_ATTRIBUTES):
